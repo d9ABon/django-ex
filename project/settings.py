@@ -139,7 +139,7 @@ LOGGING = {
         'welcome.views': {
             'level': 'DEBUG',
         },
-        'main': {
+        'welcome.management.commands.worker': {
             'level': 'DEBUG',
         },
 
