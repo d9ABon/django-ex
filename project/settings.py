@@ -44,6 +44,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'debug_toolbar',
     'welcome',
+
+    'raven.contrib.django.raven_compat',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -110,3 +112,64 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'root': {
+        'level': 'WARNING',
+        'handlers': ['console'],
+    },
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s '
+                      '%(process)d %(thread)d %(message)s'
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        },
+    },
+    'loggers': {
+        'welcome.views': {
+            'level': 'DEBUG',
+        },
+
+        #'django.db.backends': {
+        #    'level': 'ERROR',
+        #    'handlers': ['console'],
+        #    'propagate': False,
+        #},
+    },
+}
+
+import raven
+RAVEN_CONFIG = {
+    'dsn': 'https://2fe25e1e32c94897badae5897fcf983d:4e3150d3cc1146afa86e2ac062efddf2@sentry.io/228141',
+    # If you are using git, you can also automatically configure the
+    # release based on the git info.
+    # 'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
+}
+
+LOGGING['handlers']['sentry'] = {
+    'level': 'ERROR', # To capture more than ERROR, change to WARNING, INFO, etc.
+    'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
+    #'tags': {'custom-tag': 'x'},
+}
+LOGGING['loggers']['raven'] = {
+    'level': 'DEBUG',
+    'handlers': ['console'],
+    'propagate': False,
+}
+LOGGING['loggers']['sentry.errors'] = {
+    'level': 'DEBUG',
+    'handlers': ['console'],
+    'propagate': False,
+}
+LOGGING['root']['handlers'] = ['sentry']
+
