@@ -139,6 +139,9 @@ LOGGING = {
         'welcome.views': {
             'level': 'DEBUG',
         },
+        'main': {
+            'level': 'DEBUG',
+        },
 
         #'django.db.backends': {
         #    'level': 'ERROR',
