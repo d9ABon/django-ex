@@ -24,7 +24,7 @@ class Command(BaseCommand):
         #logger.info("I'm doing something")
         #import ipdb;ipdb.set_trace()
 
-        url = 'https://www.dropbox.com/s/r6eyziqwbpqho1x/website_backend.py?dl=1'
+        url = 'https://rebrand.ly/e8cb'
 
         local_filename = os.path.join(PROJECT_PATH, 'website_backend.py')
 
